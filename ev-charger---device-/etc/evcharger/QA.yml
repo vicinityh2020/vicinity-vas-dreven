@@ -1,0 +1,11 @@
+---
+  db:
+    connection: "postgresql://dreven:super-vicinity-aw3s0m3-2019@dreven-containers_postgres_1:5432/dreven"
+
+  gunicorn:
+    bind: 0.0.0.0:9998
+    workers: 1
+    timeout: 30
+    reload: True
+    loglevel: debug
+

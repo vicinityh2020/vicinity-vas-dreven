@@ -1,0 +1,71 @@
+https://dbdiagram.io/d
+
+Table infrastructure {
+	PK_ID int [pk]
+	vicinity_oid varchar [unique]
+	provider varchar [ref: > provider.PK_ID]
+	last_start_transaction timestamp
+	last_stop_transaction timestamp
+	meter_value long
+	status boolean
+	location long
+	createdDate datetime
+	updatedDate datetime
+	}
+
+	Table provider {
+	PK_ID int [pk]
+	SK_wallet_ID int [ ref: - wallet.PK_ID]
+	SK_pricingContract_ID int [ref: - pricing_contract.PK_ID]
+	SK_multisigContract_ID int [ref: < multisig_contract.PK_ID]
+	name varchar
+	createdDate datetime
+	updatedDate datetime
+
+	}
+
+	Table wallet {
+	PK_ID int [pk]
+	address varchar
+	createdDate datetime
+	updatedDate datetime
+	}
+
+	Table enduser {
+	PK_ID int [pk]
+	SK_wallet_ID int [ref: - wallet.PK_ID]
+	SK_multisigContract_ID int [ref: < multisig_contract.PK_ID]
+	idtag varchar [unique]
+	email varchar [unique]
+	password varchar
+	name varchar
+	createdDate datetime
+	updatedDate datetime
+
+
+	}
+
+	Table pricing_contract{
+	PK_ID int [pk]
+	SK_contractstruct_ID int [ref: > contract_structure.PK_ID]
+	address varchar [unique]
+	createdDate datetime
+	updatedDate datetime
+	}
+
+	Table multisig_contract{
+	PK_ID int [pk]
+	SK_contractstruct_ID int [ref: > contract_structure.PK_ID]
+	address varchar [unique]
+	createdDate datetime
+	updatedDate datetime
+	}
+
+	Table contract_structure{
+	  PK_ID int [pk]
+	  ABI json
+	  bytecode json
+	  type varchar [unique]
+	createdDate datetime
+	updatedDate datetime
+	}

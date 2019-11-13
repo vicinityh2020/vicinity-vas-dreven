@@ -1,0 +1,100 @@
+version: '3'
+
+volumes:
+  db-data:
+    external: false
+
+services:
+
+  db:
+    image: mariadb:10.4
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: stevedb
+      MYSQL_USER: steve
+      MYSQL_PASSWORD: changeme
+
+  nginx:
+    image: nginx
+    command: [nginx-debug, '-g', 'daemon off;']
+    volumes:
+      #- ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx:/etc/nginx/conf.d
+    ports: 
+      - "8180:80"
+   
+  app:
+    container_name: ocpp
+    build: ./ocpp-platform/
+    links:
+      - "db:mariadb"
+    volumes:
+      - ./ocpp-platform/:/code
+    ports:
+      - "8182:8180"
+      - "8443:8443"
+    depends_on:
+      - db
+  
+  middleware:
+    container_name: middleware
+    image: dreven-middleware:latest
+
+  mobileapi:
+    container_name: mobileapi
+    image: dreven-mobile-api
+    ports:
+    - 8080:8080
+
+  gateway:
+    container_name: gateway
+    image: acimmino/gateway-api:0.7.1
+    volumes:
+    - ./ev-charger---device-/config/gateway/GatewayConfig.xml:/gateway/config/GatewayConfig.xml
+    ports:
+    - 8181:8181
+
+  agent:
+    container_name: agent
+    image: acimmino/vicinity-agent:6.3.2
+    volumes:
+    - ./ev-charger---device-/config/agent/config-1.json:/usr/src/myapp/agent/config/agents/config-1.json
+    - ./ev-charger---device-/config/agent/service-config.json:/usr/src/myapp/agent/config/service-config.json
+    - ./ev-charger---device-/config/agent/db:/usr/src/myapp/agent/config/db
+    ports:
+    - 9997:9997
+
+  adapter:
+    container_name: adapter
+    build: ./ev-charger---device-
+    command: python evcharger/__main__.py -qa
+    ports:
+    - 9998:9998
+    environment:
+    - PYTHONUNBUFFERED=1
+
+  msp:
+    container_name: msp
+    build: ./mobility-service-provider---service
+    command: python msp/__main__.py -qa
+    ports:
+    - 19998:9998
+    environment:
+    - PYTHONUNBUFFERED=1
+
+  postgres:
+    image: healthcheck/postgres
+    container_name: dreven-containers_postgres_1
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: super-vicinity-aw3s0m3-2019
+      POSTGRES_USER: dreven
+    restart: always
+
+networks:
+  default:
+    external:
+      name: dreven-containers_default

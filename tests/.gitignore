@@ -1,0 +1,7 @@
+target/
+MyEnv/
+__pycache__/
+
+log.html
+output.xml
+report.html

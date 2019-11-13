@@ -1,0 +1,10 @@
+---
+  db:
+    connection: "sqlite:///:memory:"
+
+  gunicorn:
+    bind: 0.0.0.0:9998
+    workers: 1
+    timeout: 30
+    reload: True
+    loglevel: debug

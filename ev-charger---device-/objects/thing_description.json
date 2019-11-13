@@ -1,0 +1,473 @@
+{
+    "adapter-id": "EVCharger-adapter",
+    "thing-descriptions": [
+        {
+            "oid": "EVCharger-1",
+            "name": "evcharger",
+            "type": "adapters:EVCharger",
+            "located-in": [
+                {
+                    "location_type": "s4city:City",
+                    "label": "Algarve",
+                    "location_id": "http://www.dbpedia.org/resource/Algarve"
+                }
+            ],
+            "properties": [
+                {
+                    "pid": "ocpIpPort",
+                    "monitors": "adapters:RepositoyEntity",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "static-value": {
+                            "ocpIpPort": "134.209.207.3:8180"
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "ocpIpPort",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "lastStartTransaction",
+                    "monitors": "adapters:Start",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStartTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStartTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "lastStopTransaction",
+                    "monitors": "adapters:Stop",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStopTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStopTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "meterValue",
+                    "monitors": "adapters:ActualEnergyConsumedChargingSession",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "meterValue",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "double"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "meterValue",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "double"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "status",
+                    "monitors": "adapters:ChargeStatus",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "status",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "status",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            "actions": [],
+            "events": [
+                {
+                    "eid": "chargingStatus",
+                    "monitors": "adapters:ChargeStatus",
+                    "output": {
+                        "type": "object",
+                        "field": [
+                            {
+                                "name": "chargingStatus",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "oid": "OCPP",
+            "name": "evcharger",
+            "type": "adapters:EVCharger",
+            "located-in": [
+                {
+                    "location_type": "s4city:City",
+                    "label": "Algarve",
+                    "location_id": "http://dbpedia.org/resource/Algarve"
+                }
+            ],
+            "properties": [
+                {
+                    "pid": "ocpIpPort",
+                    "monitors": "adapters:RepositoyEntity",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "static-value": {
+                            "ocpIpPort": "134.209.207.3:8180"
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "ocpIpPort",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "lastStartTransaction",
+                    "monitors": "adapters:Start",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStartTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStartTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "lastStopTransaction",
+                    "monitors": "adapters:Stop",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStopTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "lastStopTransaction",
+                                    "predicate": "core:timestamp",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "meterValue",
+                    "monitors": "adapters:ActualEnergyConsumedChargingSession",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "meterValue",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "double"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "meterValue",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "double"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "pid": "status",
+                    "monitors": "adapters:ChargeStatus",
+                    "read_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "status",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "write_link": {
+                        "href": "/objects/{oid}/properties/{pid}",
+                        "input": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "status",
+                                    "predicate": "core:value",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "output": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "success",
+                                    "schema": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            "actions": [],
+            "events": [
+                {
+                    "eid": "chargingStatus",
+                    "monitors": "adapters:ChargeStatus",
+                    "output": {
+                        "type": "object",
+                        "field": [
+                            {
+                                "name": "chargingStatus",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

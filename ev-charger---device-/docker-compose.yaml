@@ -1,0 +1,50 @@
+version: '3'
+services:
+  gateway:
+    image: acimmino/gateway-api:0.7.1
+    volumes:
+    - ./config/gateway/GatewayConfig.xml:/gateway/config/GatewayConfig.xml
+    ports:
+    - 8181:8181
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.5
+
+  agent:
+    image: acimmino/vicinity-agent:6.3.2
+    volumes:
+    - ./config/agent/config-1.json:/usr/src/myapp/agent/config/agents/config-1.json
+    - ./config/agent/service-config.json:/usr/src/myapp/agent/config/service-config.json
+    - ./config/agent/db:/usr/src/myapp/agent/config/db
+    ports:
+    - 9997:9997
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.7
+
+  adapter:
+    image: adapter:latest
+    command: python evcharger/__main__.py -dev
+    volumes:
+    - ./evcharger:/app/evcharger
+    - ./objects:/app/objects
+    - ./requirements.txt:/app/requirements.txt
+    - ./config:/app/config
+    - ./etc:/app/etc
+    - ./tmp:/app/tmp
+    ports:
+    - 9998:9998
+    environment:
+    - PYTHONUNBUFFERED=1
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.8
+
+
+networks:
+  vpcbr:
+    ipam:
+     config:
+      - subnet: 10.5.0.0/16
+
+

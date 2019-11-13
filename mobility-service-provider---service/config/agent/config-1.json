@@ -1,0 +1,13 @@
+{
+  "credentials": {
+    "agent-id": "63a190cb-15b4-4b50-b27d-4ec5d8943081",
+    "password": "test"
+  },
+  "adapters": [
+    {
+      "adapter-id": "MSP-Service",
+      "endpoint": "http://service:9998",
+      "active-discovery": "false"
+    }
+  ]
+}
