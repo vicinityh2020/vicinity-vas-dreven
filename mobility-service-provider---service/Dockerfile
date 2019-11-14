@@ -11,7 +11,6 @@ ADD config /app/config
 ADD etc /app/etc
 ADD msp /app/msp
 ADD ethereum /app/ethereum
-ADD objects /app/objects
 ADD requirements.txt /app
 
 

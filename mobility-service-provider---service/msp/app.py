@@ -39,7 +39,7 @@ class DefaultService(falcon.API):
         mgr.setup()
 
         # Create resources and collections
-        thing_description_res = thing_description.ThingDescriptionResource()
+        # thing_description_res = thing_description.ThingDescriptionResource()
 
         providers_res = providers.ProvidersResource(mgr)
         providers_col = providers.ProvidersCollection(mgr)
@@ -65,7 +65,7 @@ class DefaultService(falcon.API):
 
         # Build routes
         # Thing description resource
-        self.add_route('/objects', thing_description_res)
+        # self.add_route('/objects', thing_description_res)
 
         # Providers  resource
         self.add_route('/providers', providers_col)
