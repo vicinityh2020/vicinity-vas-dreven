@@ -18,7 +18,7 @@ URL_BASE_AGENT = 'http://agent:9997'    #agent
 URL_GET_AGENT_CONFIG = '/agent/configuration'
 
 REVERSE_GEOCODING_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json"
-REVERCE_GEOCODING_API_KEY = "AIzaSyA5PbOYkB4i9shatP_LKaa5uDy_oj1wCcM"
+REVERCE_GEOCODING_API_KEY = "<INSERT_GOOGLE_API_KEY>"
 
 class InfrastructureCollection(BaseResource):
     def on_get(self, req, resp):
