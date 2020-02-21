@@ -160,9 +160,9 @@ class MetervalueResource(BaseResource):
 
         infrastructure.update(self.db.session, meterValue=CURRENT_METERVALUE)
 
-        print(rate)
-        print(round((CURRENT_METERVALUE - infrastructure.lastStartMeterValue)*rate))
-        print(costumer_balance)
+        print("Prace rate: ", rate)
+        print("(Current meter - Last meter) * Rate = ", round((CURRENT_METERVALUE - infrastructure.lastStartMeterValue)*rate))
+        print("Client balance: ", costumer_balance)
 
 
 

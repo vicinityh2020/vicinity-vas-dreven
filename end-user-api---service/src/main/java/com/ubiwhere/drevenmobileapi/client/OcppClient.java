@@ -53,8 +53,9 @@ public class OcppClient {
             Map<String, String> body = new HashMap();
             body.put("idTag", idTag);
 
-            ResponseEntity<Map> postResponse = restTemplate.postForEntity("http://"+ocpIpPort+ocppUrlIdTag, body, Map.class);
-            log.info("Response code: {} body: {}", postResponse.getStatusCodeValue(), postResponse.getBody());
+            ResponseEntity<Map> postResponse = restTemplate.postForEntity("http://ocpp:8180"+ocppUrlIdTag, body, Map.class);
+	    // "http://"+ocpIpPort+ocppUrlIdTag	            
+	    log.info("Response code: {} body: {}", postResponse.getStatusCodeValue(), postResponse.getBody());
         } catch (Exception e) {
             log.error("", e);
         }

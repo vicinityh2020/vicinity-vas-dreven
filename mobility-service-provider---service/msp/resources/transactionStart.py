@@ -64,7 +64,7 @@ class TransactionStartResource(BaseResource):
         USER_IDTAG = req.media.get('idTag')
         METERVALUE_START = req.media.get('meterValue')
         VICINITY_OID = req.media.get('vicinityOid')
-
+        print("Starting Tx for idTag {} with meter value {}".format(USER_IDTAG, METERVALUE_START))
         endUser_list = endUserModel.EndUserModel.get_generic(
             self.db.session, idTag=USER_IDTAG)
 

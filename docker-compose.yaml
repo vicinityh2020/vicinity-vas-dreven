@@ -33,7 +33,7 @@ services:
     volumes:
       - ./ocpp-platform/:/code
     ports:
-      - "8182:8180"
+      - "8180:8180"
       - "8443:8443"
     depends_on:
       - db
@@ -93,6 +93,16 @@ services:
       POSTGRES_PASSWORD: super-vicinity-aw3s0m3-2019
       POSTGRES_USER: dreven
     restart: always
+
+  automatic_discount:
+    container_name: automatic_discount
+    build: ./automatic-ev-discount
+    command: python main.py
+    environment:
+    - PYTHONUNBUFFERED=1
+    - THRESHOLD=1500
+    - INTERVAL=15
+    - DISCOUNT=50
 
 networks:
   default:

@@ -60,6 +60,8 @@ class TransactionStopResource(BaseResource):
         VICINITY_OID = req.media.get('vicinityOid')
         CONTRACT_ADDRESS = 'address'
 
+        print("Stopping TX for idTag {} with meter value {}".format(USER_IDTAG, METERVALUE_STOP))
+
         endUser_list = endUserModel.EndUserModel.get_generic(
             self.db.session, idTag=USER_IDTAG)
 
@@ -118,39 +120,79 @@ class TransactionStopResource(BaseResource):
 
         abi = data.get(MULTISIG_CONTRACT_ABI)
         contract = web3.eth.contract(address=contractAddress, abi=abi)
+        
+        balanceOfContract = contract.functions.balanceOfContract().call()
+        price = contract.functions.getPrice().call()
+        print("Going to charge {}".format(abs(METERVALUE_STOP - infrastructure.lastStartMeterValue)*price))
+        if abs(METERVALUE_STOP - infrastructure.lastStartMeterValue) * price < balanceOfContract:
+	    ####
+            txn = contract.functions.chargeEndUser(abs(METERVALUE_STOP - infrastructure.lastStartMeterValue)).buildTransaction({
+                'nonce': web3.eth.getTransactionCount(wallet.address),
+                'gas':  CHARGE_ENDUSER_FUNCTION_GAS_CONSUMPTION + GAS_TO_ADD
+                # GAS SHOULD USE ESTIMATEGAS() BUT
+                # ValueError: {'code': -32016, 'message': 'The execution failed due to an exception.'}
+                # There is a miscompatibility with geth (Infuras client)
+                })
 
-        # CHECKER AQUI
+            txn_signed = web3.eth.account.signTransaction(txn, wallet.privKey)
 
-        #if (round((CURRENT_METERVAMETERVALUE_STOPLUE - infrastructure.lastStartMeterValue) * rate) < costumer_balance):
+            try:
+                txn_hash = web3.eth.sendRawTransaction(txn_signed.rawTransaction)
+            except ValueError as err:
+                print('ERROR on tx sent: ', err)
+                raise HTTPForbidden(description="Insuficient balance", code=12)
 
-        txn = contract.functions.chargeEndUser(abs(METERVALUE_STOP - infrastructure.lastStartMeterValue)).buildTransaction({
-            'nonce': web3.eth.getTransactionCount(wallet.address),
-            'gas':  CHARGE_ENDUSER_FUNCTION_GAS_CONSUMPTION + GAS_TO_ADD
-            # GAS SHOULD USE ESTIMATEGAS() BUT
-            # ValueError: {'code': -32016, 'message': 'The execution failed due to an exception.'}
-            # There is a miscompatibility with geth (Infuras client)
-            })
+            web3.eth.waitForTransactionReceipt(txn_hash)
 
-        txn_signed = web3.eth.account.signTransaction(txn, wallet.privKey)
+            if web3.eth.getTransactionReceipt(txn_hash).status is 0:
+                print('ERROR receipt is 0')
+                raise HTTPForbidden(description="Transaction hash: {}".format(txn_hash.hex()), code=19)
 
-        try:
-            txn_hash = web3.eth.sendRawTransaction(txn_signed.rawTransaction)
-        except ValueError :
-            raise HTTPForbidden(description="Insuficient balance", code=12)
-
-        web3.eth.waitForTransactionReceipt(txn_hash)
-
-        if web3.eth.getTransactionReceipt(txn_hash).status is 0:
-            raise HTTPForbidden(description="Transaction hash: {}".format(txn_hash.hex()), code=19)
-
-        try:
-            infrastructure.update(self.db.session, meterValue=METERVALUE_STOP)
-        except IntegrityError:
-            raise HTTPBadRequest(description="Unique constraint failed", code=3)
+            try:
+                infrastructure.update(self.db.session, meterValue=METERVALUE_STOP)
+            except IntegrityError:
+                raise HTTPBadRequest(description="Unique constraint failed", code=3)
 
 
-        resp.status = HTTP_200
-        resp.media = {
-            "tx_hash": txn_hash.hex(),
+            resp.status = HTTP_200
+            resp.media = {
+                "tx_hash": txn_hash.hex(),
 
-        }
+            }
+
+        else:
+            txn = contract.functions.zerateEndUser().buildTransaction({
+                'nonce': web3.eth.getTransactionCount(wallet.address),
+                'gas':  CHARGE_ENDUSER_FUNCTION_GAS_CONSUMPTION + GAS_TO_ADD
+                # GAS SHOULD USE ESTIMATEGAS() BUT
+                # ValueError: {'code': -32016, 'message': 'The execution failed due to an exception.'}
+                # There is a miscompatibility with geth (Infuras client)
+                })
+
+            txn_signed = web3.eth.account.signTransaction(txn, wallet.privKey)
+
+            try:
+                txn_hash = web3.eth.sendRawTransaction(txn_signed.rawTransaction)
+            except ValueError as err:
+                print('ERROR on tx sent: ', err)
+                raise HTTPForbidden(description="Insuficient balance", code=12)
+
+            web3.eth.waitForTransactionReceipt(txn_hash)
+
+            if web3.eth.getTransactionReceipt(txn_hash).status is 0:
+                print('ERROR receipt is 0')
+                raise HTTPForbidden(description="Transaction hash: {}".format(txn_hash.hex()), code=19)
+
+            try:
+                infrastructure.update(self.db.session, meterValue=METERVALUE_STOP)
+            except IntegrityError:
+                raise HTTPBadRequest(description="Unique constraint failed", code=3)
+
+
+            resp.status = HTTP_200
+            resp.media = {
+                "tx_hash": txn_hash.hex(),
+
+            }
+
+

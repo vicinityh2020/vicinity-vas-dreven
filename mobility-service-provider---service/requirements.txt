@@ -12,5 +12,5 @@ apispec==3.0.0
 requests==2.22.0
 falcon-swagger-ui==1.1.2
 marshmallow==3.2.1
-
+pyfcm==1.4.7
 

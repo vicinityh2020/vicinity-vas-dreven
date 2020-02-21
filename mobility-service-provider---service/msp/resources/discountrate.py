@@ -7,6 +7,7 @@ from msp.db.models import providerModel, walletModel, pricingContractModel
 from msp.resources import BaseResource
 from ethereum.web3_connection import web3
 from msp.schemas.discountrate import discount_rate_patch
+from pyfcm import FCMNotification
 
 PATH_TO_JSON = 'config/eth/pricing.json'
 PRICING_CONTRACT_ABI = 'pricing_abi'
@@ -171,6 +172,12 @@ class DiscountRateResource(BaseResource):
             raise HTTPForbidden(description="Insuficient balance", code=12)
 
         web3.eth.waitForTransactionReceipt(txn_hash)
+        
+        push_service = FCMNotification(api_key="AAAAHW_gQI0:APA91bG32-pATCljChrLqMOkellwEveH0R-8MAH3EHV0GCWLCjy3xaIViEw4Db5hdF4RXbA7aOfN0gdLCDNWj5m8_kCrGgj2WAAoPuXPDeHGLJ9Jv-kQRbI9Uk8f7vk7V5aEDLgmkkQr")
+        message_title = "New discount"
+        message_body = "Provider {} has a discount of {}%!".format(provider.name, DISCOUNT_RATE_TO_SET)
+        result = push_service.notify_topic_subscribers(topic_name="all", message_title=message_title, message_body=message_body)
+        print(result)
 
         resp.status = HTTP_200
         resp.media = {

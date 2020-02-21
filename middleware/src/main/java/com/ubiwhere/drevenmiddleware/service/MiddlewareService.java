@@ -46,8 +46,8 @@ public class MiddlewareService {
                    if(value == null) {
                        log.warn("Measurand: {} not found in {}", gatewayMeterValueMeasurand,  Arrays.toString(OCPPReq));
                    } else {
-                       gwClient.putMeterValue(or.chargeBoxId, value);
-                       mspClient.putMeterValue(or.outerIdTag, or.vicinityOid, Long.valueOf(value));
+                       gwClient.putMeterValue(or.chargeBoxId, value.replaceAll("\\D", ""));
+                       mspClient.putMeterValue(or.outerIdTag, or.vicinityOid, Long.valueOf(value.replaceAll("\\D", "")));
                    }
                    break;
                default:

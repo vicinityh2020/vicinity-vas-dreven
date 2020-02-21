@@ -42,7 +42,7 @@ public class ProxyRequests {
     @Async("threadPoolTaskExecutor")
     public void proxyRequests(String chargeBoxId, String incomingString) {
         try {
-            List<Integer> txIds = transactionRepository.getTransactionIds(chargeBoxId);
+            List<Integer> txIds = transactionRepository.getActiveTransactionIds(chargeBoxId);
             String idTag = "";
 
             if(!txIds.isEmpty()){

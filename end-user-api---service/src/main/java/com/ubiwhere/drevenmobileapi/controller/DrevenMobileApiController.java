@@ -42,6 +42,7 @@ public class DrevenMobileApiController {
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        log.info("Authenticating {}", authenticationRequest.getUsername());
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         String token = jwtTokenUtil.generateToken(authenticationRequest.getUsername());
         return ResponseEntity.ok(new JwtResponse(token));
@@ -59,6 +60,7 @@ public class DrevenMobileApiController {
 
     @PostMapping(path = "/account", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto) {
+        log.info("Creating account {}", createAccountDto.toString());
         AccountDto accountDto = drevenMobileApiService.createAccount(createAccountDto);
         ocppClient.createIdtTag(accountDto.getIdTag());
         return accountDto;
@@ -67,23 +69,27 @@ public class DrevenMobileApiController {
     @GetMapping(path = "/account", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public AccountDto getAccount() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	log.info("Get account info {}", (String) auth.getPrincipal());
         return drevenMobileApiService.getAccount((String) auth.getPrincipal());
     }
 
     @GetMapping(path = "/charger", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ChargerDto> getChargers(@RequestParam Double latitude, @RequestParam Double longitude, @RequestParam Double distance) {
+        log.info("Get chargers lat:{} lon:{} dist:{}", latitude, longitude, distance);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return drevenMobileApiService.getChargers((String) auth.getPrincipal(), latitude, longitude, distance);
     }
 
     @GetMapping(path = "/provider", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<ProviderDto> getProviders() {
+	log.info("Get providers");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return drevenMobileApiService.getProviders((String) auth.getPrincipal());
     }
 
     @PostMapping(path = "/contract", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ContractDto createContract(@Valid @RequestBody CreateContractDto createContractDto) {
+	log.info("Create contract {}", createContractDto.toString());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return drevenMobileApiService.createContract((String) auth.getPrincipal(), createContractDto);
     }

@@ -1,4 +1,4 @@
-val chargeTokenId = "04EC2CC2552280"
+val chargeTokenId = "Q41JAWIAAWF3545"
 val auth = authorize(chargeTokenId).idTag
 
 if (auth.status == AuthorizationStatus.Accepted) {
