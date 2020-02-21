@@ -57,7 +57,7 @@ curl -X POST \
 ```
 ## Setup client account
 1. Scan QR code from the card that we'll be use to charge. If no QR printed in the card, convert the idTag to QR code.
-2. In the mobile app, create a new account following the normal procedure. (**FIX THINGS DESCRIPTION OCP IP PORT TO POINT TO THE CONTAINER NAME INSTEAD OF STATIC IP**)
+2. In the mobile app, create a new account following the normal procedure. 
 3. Add funds to client wallet (Ether) for transactions fee porposes
 4. Add funds (DAI) to, later, transfer to the provider contract
 ## Sign contract with provider
