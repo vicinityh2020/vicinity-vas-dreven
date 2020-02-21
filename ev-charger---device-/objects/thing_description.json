@@ -19,7 +19,7 @@
                     "read_link": {
                         "href": "/objects/{oid}/properties/{pid}",
                         "static-value": {
-                            "ocpIpPort": "134.209.207.3:8180"
+                            "ocpIpPort": "ocpp:8180"
                         },
                         "output": {
                             "type": "object",
